@@ -175,22 +175,91 @@ void countPlayers()
     readFile.close();
 }
 
+void searchRecors()
+{
+    string searchString = "";
+    cout << "Enter Player ID:";
+    cin >> searchString;
+    searchString = "ID" + searchString;
+    cout << "Search String: " << searchString << endl;
+
+    ifstream readFile;
+    readFile.open("PlayerRecords.txt");
+    char charsInLine[1024];
+    int count = 0;
+    searchString = searchString + " ";
+
+    while (!readFile.eof())
+    {
+        readFile.getline(charsInLine, 1024);
+        
+        string strLine(charsInLine);
+
+        size_t found = strLine.find(searchString);
+
+        if (found != string::npos)
+        {
+            count++;
+            cout << "Records " << count << " : " << charsInLine << endl;
+        }
+    }
+
+    readFile.close();
+    if (count == 0)
+    {
+        cout << "No records found.\n";
+    }
+    else
+    {
+        cout << "No. of Records found for " << searchString << ": " << count << endl;
+    }
+}
+
+void clearDatabase()
+{
+    int x;
+    cout << "Do you want to delete the complete Database?\n Press [1] to confirm:";
+    cin >> x;
+
+    if (x == 1)
+    {
+        remove("PlayersRecord.txt");
+        ofstream writeFile("PlayerRecords.txt");
+        writeFile.close();
+    }
+}
+
 int main()
 {
-    int input;
-    cout << "\nMenu";
-    cout << "\nAdd Player";
-    cout << "\nList Players";
-    cout << "\nSearch Player (ID)";
-    cout << "\nDelete Player (ID)";
-    cout << "\nClear Database";
-    cout << "\nExit\n";
+    file fileobj;
 
-    cin >> input;
-
-    switch (input)
+    while(1)
     {
-    case 1:
+        int input;
+        cout << "\nMenu";
+        cout << "\n[1]: Add Player";
+        cout << "\n[2]: List Players";
+        cout << "\n[3]: Search Player (ID)";
+        cout << "\n[4]: Delete Player (ID)";
+        cout << "\n[5]: Clear Database";
+        cout << "\n[6]: Exit\n";
+
+        cin >> input;
+
+        switch (input)
+        {
+        case 1: fileobj.input();
+            writetofile(fileobj);
+            break;
+        case 2: showAllRecords();
+        case 3: searchRecors();
+        case 4: deleteRecord();
+        case 5: clearDatabase();
+        case 6: cout << "Exiting.\n";
+            exit(0);
+        default: cout << "Please enter a valid Option.\n";
+            break;
+        }
     }
 
     
